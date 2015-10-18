@@ -99,12 +99,29 @@ class SassCompiler extends MultiFileCachingCompiler {
       return file;
     }
 
+    var getRootPath = function(){
+      let application_root = fs.realpathSync( meteor_root + '/../' );
+
+      // if running on dev mode
+      if( path.basename( fs.realpathSync( meteor_root + '/../../../' ) ) == '.meteor' ){
+        application_root =  fs.realpathSync( meteor_root + '/../../../../' );
+      }
+
+      return application_root;
+    }
+
     const getRealImportPath = function(importPath){
       const rawImportPath = importPath;
       var isAbsolute = false;
 
       if(importPath[0] === '/'){
         isAbsolute = true;
+      }
+
+      if(importPath.indexOf('.meteor') === 0){
+        console.log("Importing from .meteor is deprecated and will be removed in a future version. Bower packages should be transformed to Meteor packages");
+        isAbsolute = true;
+        importPath = path.join(process.cwd(),importPath);
       }
 
       //SASS has a whole range of possible import files from one import statement, try each of them
@@ -156,7 +173,7 @@ class SassCompiler extends MultiFileCachingCompiler {
 
       var importPath = url;
       for(var i = totalImportPath.length-1; i >= 0; i--){
-        if(importPath[0] === '/' || importPath[0] === '{'){
+        if(importPath[0] === '/' || importPath[0] === '{' || importPath.indexOf('.meteor') === 0){
           break;
         }
         importPath = path.join(path.dirname(totalImportPath[i]),importPath);
