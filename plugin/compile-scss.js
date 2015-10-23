@@ -34,6 +34,7 @@ var convertToStandardPath = function (osPath, partialPath) {
   return osPath;
 }
 
+
 // CompileResult is {css, sourceMap}.
 class SassCompiler extends MultiFileCachingCompiler {
   constructor() {
