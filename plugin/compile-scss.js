@@ -4,7 +4,6 @@ const sass = Npm.require('node-sass');
 const Future = Npm.require('fibers/future');
 const files = Plugin.files;
 
-
 Plugin.registerCompiler({
   extensions: ['scss', 'sass'],
   archMatching: 'web'
